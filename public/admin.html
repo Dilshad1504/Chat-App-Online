@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Chat Panel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="background:#06101a;">
+
+<div id="auth" style="padding:20px;">
+  <label>Enter admin password (demo):</label>
+  <input id="pwd" type="password" autocomplete="current-password">
+  <button id="login">Login</button>
+</div>
+
+<div id="panel" style="display:none;">
+  <div class="chat-window">
+    <div id="chatForVisitor"></div>
+    <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+      <input id="adminMsg" class="input" placeholder="Reply message...">
+      <span id="sentIndicator" style="display:none; color:#0f0; font-weight:bold;">Sent</span>
+      <button id="adminSend" class="btn">Send</button>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const ADMIN_PASSWORD='letmein';
+const loginBtn=document.getElementById('login');
+const pwdInput=document.getElementById('pwd');
+const authDiv=document.getElementById('auth');
+const panelDiv=document.getElementById('panel');
+const adminMsg=document.getElementById('adminMsg');
+const adminSend=document.getElementById('adminSend');
+const sentIndicator=document.getElementById('sentIndicator');
+const chatForVisitor=document.getElementById('chatForVisitor');
+
+let visitor=null;
+
+// Login
+function doLogin(){
+  if(pwdInput.value===ADMIN_PASSWORD){
+    authDiv.style.display='none';
+    panelDiv.style.display='block';
+  } else { alert('Wrong password'); pwdInput.value=''; pwdInput.focus(); }
+}
+loginBtn.addEventListener('click', doLogin);
+pwdInput.addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();doLogin();}});
+pwdInput.focus();
+
+const socket=io();
+
+function addMsg(text,cls){
+  const d=document.createElement('div');
+  d.className='message '+cls;
+  d.textContent=text;
+  chatForVisitor.appendChild(d);
+  chatForVisitor.scrollTop=chatForVisitor.scrollHeight;
+}
+
+function showSentIndicator(){
+  sentIndicator.style.display='inline';
+  setTimeout(()=>{sentIndicator.style.display='none';},1500);
+}
+
+// Visitor connect/disconnect
+socket.on('admin:updateVisitor',(data)=>{
+  if(data){ visitor=data.socketId; addMsg('Visitor connected','system'); }
+  else{ visitor=null; addMsg('Visitor disconnected','system'); }
+});
+
+// Receive visitor message
+socket.on('admin:incomingMessage',(data)=>{
+  visitor=data.fromSocketId;
+  addMsg((data.name ? data.name+': ':'')+data.text,'visitor');
+});
+
+// Admin sends message
+adminSend.onclick=()=>{
+  if(!visitor) return alert('No visitor connected');
+  const text=adminMsg.value.trim();
+  if(!text) return;
+  addMsg(text,'admin');
+  socket.emit('admin:reply',{toSocketId:visitor,text});
+  adminMsg.value='';
+  showSentIndicator();
+};
+
+// Send via Enter
+adminMsg.addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();adminSend.click();}});
+</script>
+</body>
+</html>

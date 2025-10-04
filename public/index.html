@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chat Widget</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="chat-widget" id="chatWidget">
+  <div class="chat-header"><strong>DILKASH</strong></div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-footer">
+    <input id="msgInput" class="input" placeholder="Type a message...">
+    <button id="sendBtn" class="btn">Send</button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const chatBody = document.getElementById('chatBody');
+const input = document.getElementById('msgInput');
+const sendBtn = document.getElementById('sendBtn');
+
+// Join as visitor
+socket.emit('visitor:join', { name: 'Visitor' });
+
+function addMsg(text, cls, sent=false){
+  const d = document.createElement('div');
+  d.className = 'message ' + cls;
+  d.textContent = text;
+  if(sent){
+    const span = document.createElement('span');
+    span.className='sent';
+    span.textContent='Sent';
+    d.appendChild(span);
+  }
+  chatBody.appendChild(d);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Send message
+sendBtn.onclick = () => {
+  const text = input.value.trim();
+  if(!text) return;
+  addMsg(text, 'visitor', true); // visitor message + sent
+  socket.emit('visitor:message', { text });
+  input.value='';
+};
+
+// Send via Enter
+input.addEventListener('keydown', (e)=>{
+  if(e.key==='Enter'){ e.preventDefault(); sendBtn.click(); }
+});
+
+// Receive admin message
+socket.on('visitor:incomingMessage', (data)=>{
+  addMsg((data.from ? data.from + ': ' : '') + data.text, 'admin');
+});
+</script>
+</body>
+</html>
