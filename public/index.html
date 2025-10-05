@@ -2,30 +2,206 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Chat Widget</title>
-<link rel="stylesheet" href="style.css">
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* --- Login Card --- */
+  #auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .login-card {
+    background: rgba(255,255,255,0.9);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    width: 280px;
+    text-align: center;
+  }
+
+  .login-card input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 15px;
+  }
+
+  .login-card button {
+    width: 100%;
+    padding: 12px;
+    background: #667eea;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .login-card button:hover {
+    background: #5563d1;
+  }
+
+  /* --- Chat Widget --- */
+  #panel {
+    display: none; /* by default hidden */
+    height: 100vh;
+    width: 100%;
+    max-width: 600px;
+    background: #fafafa;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    background: #667eea;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .chat-body {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f7f7f7;
+  }
+
+  .message {
+    margin: 8px 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    max-width: 75%;
+    word-wrap: break-word;
+    font-size: 15px;
+  }
+
+  .message.visitor {
+    background: #667eea;
+    color: white;
+    margin-left: auto;
+  }
+
+  .message.admin {
+    background: #e5e5e5;
+    margin-right: auto;
+    color: black;
+  }
+
+  .message .sent {
+    display: block;
+    font-size: 11px;
+    color: #ddd;
+    margin-top: 4px;
+    text-align: right;
+  }
+
+  .chat-footer {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+  }
+
+  .chat-footer input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    font-size: 15px;
+    background: #f0f0f0;
+  }
+
+  .chat-footer button {
+    margin-left: 8px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 50%;
+    background: #667eea;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .chat-footer button:hover {
+    background: #5563d1;
+  }
+</style>
 </head>
 <body>
 
-<div class="chat-widget" id="chatWidget">
+<!-- Login Page -->
+<div id="auth">
+  <div class="login-card">
+    <input id="pwd" type="password" placeholder="Enter Password" autocomplete="off">
+    <button id="login">Enter</button>
+  </div>
+</div>
+
+<!-- Chat Panel -->
+<div id="panel">
   <div class="chat-header"><strong>DILKASH</strong></div>
   <div class="chat-body" id="chatBody"></div>
   <div class="chat-footer">
     <input id="msgInput" class="input" placeholder="Type a message...">
-    <button id="sendBtn" class="btn">Send</button>
+    <button id="sendBtn" class="btn">➤</button>
   </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+const PASSWORD = "dilkash";
+const authDiv = document.getElementById('auth');
+const panelDiv = document.getElementById('panel');
+const loginBtn = document.getElementById('login');
+const pwdInput = document.getElementById('pwd');
+
+loginBtn.onclick = () => {
+  if (pwdInput.value === PASSWORD) {
+    authDiv.style.display = 'none';
+    panelDiv.style.display = 'flex';
+  } else {
+    alert("Wrong Password!");
+    pwdInput.value = "";
+    pwdInput.focus();
+  }
+};
+pwdInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); loginBtn.click(); }});
+
+// --- Chat functionality ---
 const socket = io();
 const chatBody = document.getElementById('chatBody');
 const input = document.getElementById('msgInput');
 const sendBtn = document.getElementById('sendBtn');
 
-// Join as visitor
-socket.emit('visitor:join', { name: 'Visitor' });
+// Join as visitor (after login only)
+function initChat(){
+  socket.emit('visitor:join', { name: 'Visitor' });
+}
 
 function addMsg(text, cls, sent=false){
   const d = document.createElement('div');
@@ -45,19 +221,24 @@ function addMsg(text, cls, sent=false){
 sendBtn.onclick = () => {
   const text = input.value.trim();
   if(!text) return;
-  addMsg(text, 'visitor', true); // visitor message + sent
+  addMsg(text, 'visitor', true);
   socket.emit('visitor:message', { text });
   input.value='';
 };
 
 // Send via Enter
-input.addEventListener('keydown', (e)=>{
-  if(e.key==='Enter'){ e.preventDefault(); sendBtn.click(); }
-});
+input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); sendBtn.click(); }});
 
 // Receive admin message
 socket.on('visitor:incomingMessage', (data)=>{
   addMsg((data.from ? data.from + ': ' : '') + data.text, 'admin');
+});
+
+// ensure chat join after password success
+loginBtn.addEventListener('click', ()=>{
+  if(pwdInput.value === PASSWORD){
+    initChat();
+  }
 });
 </script>
 </body>
