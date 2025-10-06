@@ -9,131 +9,161 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: Arial, sans-serif;
-    background: #06101a;
-    color: white;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  /* --- Login Card (Admin Style) --- */
+  /* --- Login Card --- */
   #auth {
     position: absolute;
-    top: 0;
+    top: 0; 
     left: 0;
-    width: 100%;
+    width: 100%; 
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #06101a;
+    justify-content: center;   /* horizontally center */
+    align-items: flex-start;   /* top aligned */
+    padding-top: 50px;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     z-index: 1000;
   }
 
   .login-card {
-    background: #111b27;
+    background: rgba(30,30,30,0.95);
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.6);
-    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
     width: 300px;
+    text-align: center;
   }
 
   .login-card input {
-    width: 91%;
+    width: 90%;
     padding: 12px;
     margin-bottom: 15px;
-    border-radius: 6px;
+    border-radius: 8px;
     border: none;
     outline: none;
     font-size: 16px;
+    background: #222;
+    color: white;
   }
 
   .login-card button {
     width: 100%;
     padding: 12px;
-    background: #25d366;
+    background: linear-gradient(135deg,#667eea,#764ba2);
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     color: white;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
   }
 
   .login-card button:hover {
-    background: #1ebd5a;
+    background: linear-gradient(135deg,#5a6edb,#6a3f95);
   }
 
   /* --- Chat Panel --- */
   #panel {
-    display: none; /* hidden initially */
+    display: none;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #fafafa;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #121212;
     display: flex;
     flex-direction: column;
     z-index: 500;
   }
 
   .chat-header {
-    background: #667eea;
+    background: #1f1f1f;
     color: white;
-    padding: 12px;
+    padding: 14px;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
     position: sticky;
     top: 0;
     z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  .chat-window {
+  .status {
+    font-size: 13px;
+    font-weight: normal;
+  }
+
+  .status .dot {
+    height: 10px; width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  .chat-body {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     overflow-y: auto;
-    background: #f7f7f7;
+    background: #181818;
     scroll-behavior: smooth;
   }
 
-  .message {
-    margin: 8px 0;
-    padding: 10px 14px;
+  .chat-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat-body::-webkit-scrollbar-thumb {
+    background: #444;
     border-radius: 10px;
+  }
+
+  .message {
+    margin: 10px 0;
+    padding: 12px 16px;
+    border-radius: 18px;
     max-width: 75%;
     word-wrap: break-word;
     font-size: 15px;
-  }
-
-  .message.visitor {
-    background: #667eea;
-    color: white;
-    margin-left: auto;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   }
 
   .message.admin {
-    background: #e5e5e5;
-    color: black;
-    margin-right: auto;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
   }
 
-  .message.system {
-    text-align: center;
-    color: gray;
-    font-style: italic;
+  .message.visitor {
+    background: #2a2a2a;
+    color: #ddd;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+  }
+
+  .timestamp {
+    display: block;
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 5px;
+    text-align: right;
   }
 
   .chat-input-bar {
     display: flex;
-    gap: 8px;
     align-items: center;
-    padding: 8px;
-    border-top: 1px solid #ddd;
-    background: #fff;
+    padding: 10px;
+    background: #1f1f1f;
+    border-top: 1px solid #333;
     position: sticky;
     bottom: 0;
     z-index: 10;
@@ -141,26 +171,30 @@
 
   .chat-input-bar input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: none;
     border-radius: 20px;
     outline: none;
-    font-size: 16px;
-    background: #f0f0f0;
+    font-size: 15px;
+    background: #2a2a2a;
+    color: white;
   }
 
   .chat-input-bar button {
-    padding: 10px 14px;
+    margin-left: 10px;
+    padding: 12px 15px;
     border: none;
     border-radius: 50%;
-    background: #667eea;
+    background: linear-gradient(135deg,#667eea,#764ba2);
     color: white;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
+    transition: 0.3s;
   }
 
   .chat-input-bar button:hover {
-    background: #5563d1;
+    transform: scale(1.1);
+    background: linear-gradient(135deg,#5a6edb,#6a3f95);
   }
 
   #sentIndicator {
@@ -168,6 +202,7 @@
     font-weight: bold;
     margin-left: 10px;
   }
+
 </style>
 </head>
 <body>
@@ -175,18 +210,20 @@
 <!-- Login -->
 <div id="auth">
   <div class="login-card">
-    <h2>Admin Login</h2>
-    <input id="pwd" type="password" placeholder="Enter Password" autocomplete="current-password">
+    <input id="pwd" type="password" placeholder="Enter Admin Password" autocomplete="off">
     <button id="login">Login</button>
   </div>
 </div>
 
 <!-- Admin Panel -->
 <div id="panel">
-  <div class="chat-header"><strong>DILKASH</strong></div>
-  <div class="chat-window" id="chatForVisitor"></div>
+  <div class="chat-header">
+    <span><strong>KASHAF</strong></span>
+    <span id="status" class="status"><span class="dot" style="background:red;"></span>Offline</span>
+  </div>
+  <div class="chat-body" id="chatForVisitor"></div>
   <div class="chat-input-bar">
-    <input id="adminMsg" placeholder="Reply message...">
+    <input id="adminMsg" placeholder="Type a message...">
     <span id="sentIndicator" style="display:none;">Sent</span>
     <button id="adminSend">➤</button>
   </div>
@@ -223,14 +260,25 @@ pwdInput.focus();
 
 const socket=io();
 
+// Utility to format time
+function formatTime() {
+  const now = new Date();
+  let hrs = now.getHours();
+  const mins = now.getMinutes().toString().padStart(2,'0');
+  const ampm = hrs >= 12 ? 'PM' : 'AM';
+  hrs = hrs % 12 || 12;
+  return `${hrs}:${mins} ${ampm}`;
+}
+
 function addMsg(text,cls){
   const d=document.createElement('div');
   d.className='message '+cls;
-  d.textContent=text;
+  d.innerHTML=text+`<span class="timestamp">${formatTime()}</span>`;
   chatForVisitor.appendChild(d);
   chatForVisitor.scrollTop = chatForVisitor.scrollHeight;
 }
 
+// Show sent indicator
 function showSentIndicator(){
   sentIndicator.style.display='inline';
   setTimeout(()=>{sentIndicator.style.display='none';},1500);
@@ -238,14 +286,14 @@ function showSentIndicator(){
 
 // Visitor connect/disconnect
 socket.on('admin:updateVisitor',(data)=>{
-  if(data){ visitor=data.socketId; addMsg('Visitor connected','system'); }
-  else{ visitor=null; addMsg('Visitor disconnected','system'); }
+  if(data){ visitor=data.socketId; addMsg('Visitor connected','visitor'); }
+  else{ visitor=null; addMsg('Visitor disconnected','visitor'); }
 });
 
 // Receive visitor message
 socket.on('admin:incomingMessage',(data)=>{
   visitor=data.fromSocketId;
-  addMsg((data.name ? data.name+': ':'')+data.text,'visitor');
+  addMsg('Kashaf: '+data.text,'visitor');
 });
 
 // Admin sends message
@@ -259,8 +307,12 @@ adminSend.onclick=()=>{
   showSentIndicator();
 };
 
-// Send via Enter
 adminMsg.addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();adminSend.click();}});
+
+// Online/Offline status
+socket.on('visitorStatus', (isOnline)=>{
+  status.innerHTML = `<span class="dot" style="background:${isOnline?'#25d366':'red'};"></span>${isOnline?'Online':'Offline'}`;
+});
 </script>
 </body>
 </html>

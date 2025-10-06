@@ -10,8 +10,8 @@
     padding: 0;
     height: 100%;
     width: 100%;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,23 +20,24 @@
   /* --- Login Card --- */
   #auth {
     position: absolute;
-    top: 0;
+    top: 0; 
     left: 0;
-    width: 100%;
+    width: 100%; 
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center;   /* horizontally center */
+    align-items: flex-start;   /* top aligned */
+    padding-top: 50px;         /* top gap */
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     z-index: 1000;
-    background: linear-gradient(135deg, #667eea, #764ba2);
   }
 
   .login-card {
-    background: rgba(255,255,255,0.95);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    width: 280px;
+    background: rgba(30,30,30,0.95);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    width: 300px;
     text-align: center;
   }
 
@@ -45,98 +46,124 @@
     padding: 12px;
     margin-bottom: 15px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: none;
     outline: none;
     font-size: 16px;
-    /* padding-right: -2px; */
+    background: #222;
+    color: white;
   }
 
   .login-card button {
     width: 100%;
     padding: 12px;
-    background: #667eea;
+    background: linear-gradient(135deg,#667eea,#764ba2);
     border: none;
     border-radius: 8px;
     color: white;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-
+    transition: 0.3s;
   }
 
   .login-card button:hover {
-    background: #5563d1;
+    background: linear-gradient(135deg,#5a6edb,#6a3f95);
   }
 
-  /* --- Chat Widget --- */
+  /* --- Chat Panel --- */
   #panel {
-    display: none; /* hidden initially */
+    display: none;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #fafafa;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #121212;
     display: flex;
     flex-direction: column;
     z-index: 500;
   }
 
   .chat-header {
-    background: #667eea;
+    background: #1f1f1f;
     color: white;
-    padding: 12px;
+    padding: 14px;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
     position: sticky;
     top: 0;
     z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .status {
+    font-size: 13px;
+    font-weight: normal;
+  }
+
+  .status .dot {
+    height: 10px; width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
   }
 
   .chat-body {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     overflow-y: auto;
-    background: #f7f7f7;
+    background: #181818;
     scroll-behavior: smooth;
   }
 
-  .message {
-    margin: 8px 0;
-    padding: 10px 14px;
+  .chat-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat-body::-webkit-scrollbar-thumb {
+    background: #444;
     border-radius: 10px;
+  }
+
+  .message {
+    margin: 10px 0;
+    padding: 12px 16px;
+    border-radius: 18px;
     max-width: 75%;
     word-wrap: break-word;
     font-size: 15px;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   }
 
   .message.visitor {
-    background: #667eea;
+    background: linear-gradient(135deg,#667eea,#764ba2);
     color: white;
     margin-left: auto;
+    border-bottom-right-radius: 4px;
   }
 
   .message.admin {
-    background: #e5e5e5;
+    background: #2a2a2a;
+    color: #ddd;
     margin-right: auto;
-    color: black;
+    border-bottom-left-radius: 4px;
   }
 
-  .message .sent {
+  .timestamp {
     display: block;
     font-size: 11px;
-    color: #ddd;
-    margin-top: 4px;
+    color: #aaa;
+    margin-top: 5px;
     text-align: right;
   }
 
   .chat-footer {
     display: flex;
     align-items: center;
-    padding: 8px;
-    background: #fff;
-    border-top: 1px solid #ddd;
+    padding: 10px;
+    background: #1f1f1f;
+    border-top: 1px solid #333;
     position: sticky;
     bottom: 0;
     z-index: 10;
@@ -144,27 +171,30 @@
 
   .chat-footer input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: none;
     border-radius: 20px;
     outline: none;
-    font-size: 16px;
-    background: #f0f0f0;
+    font-size: 15px;
+    background: #2a2a2a;
+    color: white;
   }
 
   .chat-footer button {
-    margin-left: 8px;
-    padding: 10px 14px;
+    margin-left: 10px;
+    padding: 12px 15px;
     border: none;
     border-radius: 50%;
-    background: #667eea;
+    background: linear-gradient(135deg,#667eea,#764ba2);
     color: white;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
+    transition: 0.3s;
   }
 
   .chat-footer button:hover {
-    background: #5563d1;
+    transform: scale(1.1);
+    background: linear-gradient(135deg,#5a6edb,#6a3f95);
   }
 </style>
 </head>
@@ -180,7 +210,10 @@
 
 <!-- Chat Panel -->
 <div id="panel">
-  <div class="chat-header"><strong>DILKASH</strong></div>
+  <div class="chat-header">
+    <span><strong>DILKASH</strong></span>
+    <span id="status" class="status"><span class="dot" style="background:red;"></span>Offline</span>
+  </div>
   <div class="chat-body" id="chatBody"></div>
   <div class="chat-footer">
     <input id="msgInput" class="input" placeholder="Type a message...">
@@ -195,11 +228,12 @@ const authDiv = document.getElementById('auth');
 const panelDiv = document.getElementById('panel');
 const loginBtn = document.getElementById('login');
 const pwdInput = document.getElementById('pwd');
+const statusEl = document.getElementById('status');
 
 loginBtn.onclick = () => {
   if (pwdInput.value === PASSWORD) {
-    authDiv.style.display = 'none'; // hide login card
-    panelDiv.style.display = 'flex'; // show chat panel full screen
+    authDiv.style.display = 'none';
+    panelDiv.style.display = 'flex';
     initChat();
   } else {
     alert("Wrong Password!");
@@ -209,55 +243,52 @@ loginBtn.onclick = () => {
 };
 pwdInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); loginBtn.click(); }});
 
-// --- Chat functionality ---
 const socket = io();
 const chatBody = document.getElementById('chatBody');
 const input = document.getElementById('msgInput');
 const sendBtn = document.getElementById('sendBtn');
 
 function initChat(){
-  socket.emit('visitor:join', { name: 'Visitor' });
+  socket.emit('visitor:join', { name: 'Kashaf' });
 }
 
-// Scroll to bottom function
-function scrollToBottom() {
-  chatBody.scrollTop = chatBody.scrollHeight;
+// Utility to format time
+function formatTime() {
+  const now = new Date();
+  let hrs = now.getHours();
+  const mins = now.getMinutes().toString().padStart(2,'0');
+  const ampm = hrs >= 12 ? 'PM' : 'AM';
+  hrs = hrs % 12 || 12;
+  return `${hrs}:${mins} ${ampm}`;
 }
 
-function addMsg(text, cls, sent=false){
+function addMsg(text, cls){
   const d = document.createElement('div');
   d.className = 'message ' + cls;
-  d.textContent = text;
-  if(sent){
-    const span = document.createElement('span');
-    span.className='sent';
-    span.textContent='Sent';
-    d.appendChild(span);
-  }
+  d.innerHTML = text + `<span class="timestamp">${formatTime()}</span>`;
   chatBody.appendChild(d);
-  scrollToBottom();
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
 
 // Send message
 sendBtn.onclick = () => {
   const text = input.value.trim();
   if(!text) return;
-  addMsg(text, 'visitor', true);
+  addMsg(text, 'visitor');
   socket.emit('visitor:message', { text });
   input.value='';
-  scrollToBottom();
 };
 
-// Send via Enter
 input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); sendBtn.click(); }});
-
-// Scroll to bottom when input is focused
-input.addEventListener('focus', scrollToBottom);
 
 // Receive admin message
 socket.on('visitor:incomingMessage', (data)=>{
   addMsg((data.from ? data.from + ': ' : '') + data.text, 'admin');
-  scrollToBottom();
+});
+
+// Online/Offline status update
+socket.on('adminStatus', (isOnline)=>{
+  statusEl.innerHTML = `<span class="dot" style="background:${isOnline?'#25d366':'red'};"></span>${isOnline?'Online':'Offline'}`;
 });
 </script>
 </body>
